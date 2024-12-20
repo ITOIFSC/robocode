@@ -32,6 +32,23 @@ public class AimLock extends AdvancedRobot {
             setMaxVelocity((12 * Math.random()) + 12); // Define uma nova velocidade máxima aleatória
         }
 
+        // Se o inimigo estiver a mais de 150 unidades de distância
+        if (e.getDistance() > 150) {
+          gunTurnAmt = robocode.util.Utils.normalRelativeAngle(absBearing - getGunHeadingRadians() + latVel / 22); 
+          // Calcula quanto girar a arma para mirar (levemente liderando o alvo)
+          setTurnGunRightRadians(gunTurnAmt); // Gira a arma na direção correta
+          setTurnRightRadians(robocode.util.Utils.normalRelativeAngle(absBearing - getHeadingRadians() + latVel / getVelocity())); 
+          // Gira o robô na direção prevista do inimigo
+          setAhead((e.getDistance() - 140) * moveDirection); // Move-se para frente (ou para trás se moveDirection for negativo)
+          setFire(3); // Atira com potência 3
+      } else { // Se o inimigo estiver perto o suficiente
+          gunTurnAmt = robocode.util.Utils.normalRelativeAngle(absBearing - getGunHeadingRadians() + latVel / 15);
+          // Calcula quanto girar a arma para mirar
+          setTurnGunRightRadians(gunTurnAmt); // Gira a arma na direção certa
+          setTurnLeft(-90 - e.getBearing()); // Gira 90 graus para ficar perpendicular ao inimigo
+          setAhead((e.getDistance() - 140) * moveDirection); // Move-se para frente ou para trás
+          setFire(3); // Atira com potência 3
+      }
 
 
     }
